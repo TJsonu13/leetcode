@@ -1,30 +1,38 @@
 class Solution {
 public:
     vector<int> sortArray(vector<int>& nums) {
-        int n=nums.size();
-        int ind=(n/2);
-        for(int i=ind;i>=0;i--)
-        heapify(nums,n,i);
-        for(int i=n-1;i>=0;i--)
-        {
-            swap(nums[i],nums[0]);
-            heapify(nums,i,0);
-        }
+        mergesort(nums,0,nums.size()-1);
         return nums;
     }
-    void heapify(vector<int>&nums ,int n,int ind)
+    void mergesort(vector<int>&nums, int left, int right)
     {
-        int leftchild=2*ind+1;
-        int rightchild=2*ind+2;
-        int parent=ind;
-        if(leftchild<n&&nums[leftchild]>nums[parent])
-        parent=leftchild;
-        if(rightchild<n&&nums[rightchild]>nums[parent])
-        parent =rightchild;
-        if(parent!=ind)
+        if(left>=right)
+        return ;
+        int mid= left+(right-left)/2;
+        mergesort(nums,left,mid);
+        mergesort(nums,mid+1,right);
+        merge(nums,left,mid,right);
+    }
+    void merge(vector<int>&nums,int low, int mid, int high)
+    {
+        int left =low;
+        int right = mid+1;
+        vector<int>temp;
+        while(left<=mid&&right<=high)
         {
-            swap(nums[ind],nums[parent]);
-            heapify(nums,n,parent);
+            if(nums[left]>nums[right])
+            temp.push_back(nums[right++]);
+            else
+            temp.push_back(nums[left++]);
+        }
+        while(left<=mid)
+        temp.push_back(nums[left++]);
+        while(right<=high)
+        temp.push_back(nums[right++]);
+
+        for(int i= low;i<=high;i++)
+        {
+            nums[i] = temp[i-low];
         }
     }
 };
